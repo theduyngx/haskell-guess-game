@@ -105,8 +105,8 @@ allChord = triComb $ allPitch [(minBound::Note)..] [(minBound::Octave)..]
 match :: (Ord a) => (Pitch -> a) -> Chord -> Chord -> Int -> Int
 match f (t:ts) (g:gs) s2
     | f t == f g = match f ts gs (s2+1)
-    | otherwise  = if f t < f g then match f ts (g:gs) s2
-                                else match f (t:ts) gs s2
+    | f t <  f g = match f ts (g:gs) s2
+    | otherwise  = match f (t:ts) gs s2
 match _ _ _ result = result
  
 -- | Return feedback of a guess relative to the target. If there's a

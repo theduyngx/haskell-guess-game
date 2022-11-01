@@ -1,20 +1,20 @@
 # GuessGame
 The ``GuessGame`` module for *The Game of Musician*, where the user is considered the musician
-who will input a 3-Pitch chord (or simply, chord) and the program will try and make as few
+who will input a 3-Pitch chord (or simply, chord) and the program will attempt to make as few
 guesses as possible.
 
 A Pitch is made of 2 components - Note and Octave. A note, conventionally, includes ``C``,
 ``D``, ``E``, ``F``, ``G``, ``A``, and ``B``. An octave is represented by a number ``1``, ``2``,
-and ``3``. The program doesn't concern flat and sharp notes, or other octaves outside 1-3 range.
+or ``3``. The program doesn't concern flat and sharp notes, or other octaves outside said range.
 
 For each program's guess, a *feedback* will be returned with the format ``(Int, Int, Int)``. The
-first integer represents the number of Pitch matches, second is number of Note matches, and third
-is number of Octave matches. It should be noted that for every Pitch match, the Pitch will not be
-considered for the other 2 matches. For instance, take 2 pitches ``C1 D2 D3`` and ``D1 C1 C3``.
-There is 1 Pitch match, which is ``C1``, so any match related to that won't be of consideration.
-We technically have 2 Octave matches, which are ``C1`` and ``D1``, and ``D3`` and ``C3``; however
-since ``C1`` isn't considered we only store 1 Octave match. Likewise with Note match. Hence, the
-feedback is: ``(1,1,1)``.
+integers, respectively, represent the number of Pitch matches, Note matches, and Octave matches.
+It should be noted that for every Pitch match, said Pitch will not be considered for the other 2
+category matches. For instance, for ``C1 D2 D3`` and ``D1 C1 C3``, there is 1 Pitch match, which
+is ``C1``, so any other matches related to that pitch will not be of consideration.
+Technically, we have 2 Octave matches, which are ``C1`` and ``D1``, and ``D3`` and ``C3``; but,
+since ``C1`` isn't considered anymore, we only store the latter Octave match. Likewise with Note
+match. Hence, the feedback is: ``(1,1,1)``.
 
 Here are some other examples:<br>
 Feedback between ``C1 C2 C3`` and ``C2 C1 C3`` is ``(3,0,0)``.<br>
@@ -23,12 +23,11 @@ Feedback between ``A1 B1 C3`` and ``A2 B1 A3`` is ``(1,1,2)``.<br>
 Feedback between ``A1 C1 E2`` and ``F1 B1 A2`` is ``(0,1,3)``.
 
 ## Usage
-
-To interact with the program, run main function in module Main:
+To interact with the program, run ``main`` function in module ``Main``:
 ```
 ghci> main
 ```
-or run the entire stack on the correct ``cd`` directory:
+or run the entire stack on the correct directory:
 ```
 ghci> stack run
 ```
