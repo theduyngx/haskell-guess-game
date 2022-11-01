@@ -25,16 +25,16 @@ Feedback between ``A1 C1 E2`` and ``F1 B1 A2`` is ``(0,1,3)``.
 ## Usage
 
 To interact with the program, run main function in module Main:
-```aidl
+```
 ghci> main
 ```
 or run the entire stack on the correct ``cd`` directory:
-```aidl
+```
 ghci> stack run
 ```
 to which the program will ask for user's input (a 3-pitch chord separated by whitespace) via IO.
 Example of input:
-```aidl
+```
 ghci> main
 
 Target chord (3 pitches separated by spaces):
