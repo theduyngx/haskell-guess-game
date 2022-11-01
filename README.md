@@ -34,7 +34,7 @@ ghci> stack run
 ```
 to which the program will ask for user's input (a 3-pitch chord separated by whitespace) via IO.
 Example of input:
-```
+```diff
 ghci> main
 
 Target chord (3 pitches separated by spaces):
