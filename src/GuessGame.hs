@@ -1,4 +1,4 @@
-{- |
+{-
 Module  : GuessGame
 Author  : The Duy Nguyen <theduyn@student.unimelb.edu.au>
 Purpose : The Game of Musician where 3 pitches are inputted by user as
@@ -15,8 +15,7 @@ it will make better guesses via process of elimination and retention.
 module GuessGame (Pitch, toPitch, feedback, GameState,
                   initialGuess, nextGuess) where
 
-import Data.Ord  (comparing)
-import Data.List (sort, group, sortBy, tails)
+import Data.List (sort, group, sortOn, tails)
 
 -- * Data types and types
 -- ** A note data type
@@ -34,7 +33,7 @@ instance Show Octave where
 data Pitch = Pitch { note :: Note, octave :: Octave }
      deriving (Eq, Ord)
 instance Show Pitch where
-     show (Pitch {note = n, octave = o}) = show n ++ show o
+     show Pitch {note = n, octave = o} = show n ++ show o
 
 -- ** Chord - 3-pitch combination (representing target and guess)
 type Chord      = [Pitch]
@@ -123,7 +122,7 @@ feedback tgt gss =
      match note   (sortCompare note   tgt') (sortCompare note   gss') 0,
      match octave (sortCompare octave tgt') (sortCompare octave gss') 0)
            where  removeCommon xs ys = [x | x <- xs, x `notElem` ys]
-                  sortCompare f t    = sortBy (comparing f) t
+                  sortCompare f t    = sortOn f t
                   tgt' = removeCommon tgt gss
                   gss' = removeCommon gss tgt
 

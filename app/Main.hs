@@ -1,15 +1,15 @@
-{- |
+{-
+Module    : Main
 Author    : The Duy Nguyen
 Purpose   : Test program
-Copyright : (c) 2020 The University of Melbourne, based on
+Copyright : (c) 2020 The University of Melbourne, modifed based on
             Peter Schachte's code.
 -}
 
 -- TESTING CODE
 
-module Main where
+module Main (main) where
 
-import Data.Maybe
 import GuessGame
 
 -- | Guess the given target, counting and showing the guesses.
@@ -37,4 +37,6 @@ main :: IO ()
 main = do
     putStrLn "\nTarget chord (3 pitches separated by spaces): "
     text <- getLine
-    guessTest . fromJust . mapM toPitch . words $ text
+    case mapM toPitch . words $ text of
+         Nothing -> error "Invalid chord!"
+         Just c  -> guessTest c
