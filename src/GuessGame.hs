@@ -87,9 +87,9 @@ toPitch _ = Nothing
 allPitch :: [Note] -> [Octave] -> Chord
 allPitch (n:ns) (o:os) = getChord (n:ns) o ++ allPitch (n:ns) os
     where getChord (x:xs) y = Pitch {note=x, octave=y} : getChord xs y
-          getChord _ _      = []
+          getChord  _     _ = []
 allPitch _ _ = []
-
+ 
 -- | Get all triplet combinations (chords) from a specified list;
 --   Used to get all possible 3-pitch chords for GameState
 triComb :: [a] -> [[a]]
@@ -103,12 +103,11 @@ allChord = triComb $ allPitch [(minBound::Note)..] [(minBound::Octave)..]
 --   Arguments: note/octave function, target, guess, and current number
 --   of Note/Octave matches
 match :: (Ord a) => (Pitch -> a) -> Chord -> Chord -> Int -> Int
-match _ [] _ result = result
-match _ _ [] result = result
 match f (t:ts) (g:gs) s2
     | f t == f g = match f ts gs (s2+1)
     | otherwise  = if f t < f g then match f ts (g:gs) s2
                                 else match f (t:ts) gs s2
+match _ _ _ result = result
  
 -- | Return feedback of a guess relative to the target. If there's a
 --   Pitch match, instead of reporting it as a match of Pitch, Note
@@ -119,10 +118,9 @@ match f (t:ts) (g:gs) s2
 feedback :: Chord -> Chord -> Feedback
 feedback tgt gss =
     (length tgt - length tgt',
-     match note   (sortCompare note   tgt') (sortCompare note   gss') 0,
-     match octave (sortCompare octave tgt') (sortCompare octave gss') 0)
+     match note   (sortOn note   tgt') (sortOn note   gss') 0,
+     match octave (sortOn octave tgt') (sortOn octave gss') 0)
            where  removeCommon xs ys = [x | x <- xs, x `notElem` ys]
-                  sortCompare f t    = sortOn f t
                   tgt' = removeCommon tgt gss
                   gss' = removeCommon gss tgt
 
@@ -138,7 +136,7 @@ getAverage lst = sum
 --   is deduced from list of feedbacks from making said chord the guess.
 avgRemain :: GameState -> [Feedback] -> Chord -> GuessScore
 avgRemain [] fbs gs    = (gs, getAverage fbs)
-avgRemain (c:cs) fb gs = avgRemain cs (fb ++ [feedback c gs]) gs
+avgRemain (c:cs) fb gs = avgRemain cs (feedback c gs : fb) gs
 
 -- | Get list of all guesses from current GameState and respective scores
 allGuess :: GameState -> GameState -> [GuessScore]
@@ -150,13 +148,13 @@ allGuess gmst chord = map (avgRemain chord []) gmst
 minAvgRemain :: [GuessScore] -> GuessScore -> GuessScore
 minAvgRemain [] finalGuess = finalGuess
 minAvgRemain (p:ps) tmp    = minAvgRemain ps tmp'
-    where tmp' = if snd p < snd tmp then p else tmp
+     where tmp' = if snd p < snd tmp then p else tmp
 
 -- | Pick best guess by regarding all remaining chords as a target
 --   and choose one leaving smallest expected number of remainders
 pickGuess :: GameState -> Chord
-pickGuess chord = fst $ minAvgRemain (allGuess chord chord)
-                                     ([], fromIntegral $ length allChord)
+pickGuess chord = let inf = fromIntegral $ length allChord
+                  in  fst $ minAvgRemain (allGuess chord chord) ([], inf)
 
 -- | Return the initial guess without any input
 initialGuess :: (Chord, GameState)
@@ -168,5 +166,5 @@ initialGuess = ([a,b,c], allChord)
 -- | Make the next guesses by narrowing down the GameState and picking
 --   guesses that are probabilistically optimal
 nextGuess :: (Chord, GameState) -> Feedback -> (Chord, GameState)
-nextGuess (gs, gmst) fb = (pickGuess chords, chords)
-           where chords = filter ((== fb) . feedback gs) gmst
+nextGuess (gs, gmst) fb = let chords = filter ((== fb) . feedback gs) gmst
+                          in  (pickGuess chords, chords)

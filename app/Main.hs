@@ -1,12 +1,13 @@
 {-
-Module    : Main
 Author    : The Duy Nguyen
 Purpose   : Test program
 Copyright : (c) 2020 The University of Melbourne, modifed based on
             Peter Schachte's code.
--}
 
--- TESTING CODE
+Entry program code of the guessing game. It will ask user to input a
+3-pitch chord, and then using functions in GuessGame.hs to make the
+guesses.
+-}
 
 module Main (main) where
 
