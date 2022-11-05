@@ -1,4 +1,4 @@
-# GuessGame
+# The Game of Musician - A Haskell guess game
 The ``GuessGame`` module for *The Game of Musician*, where the user is considered the musician
 who will input a 3-Pitch chord (or simply, chord) and the program will attempt to make as few
 guesses as possible.
